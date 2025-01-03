@@ -20,20 +20,27 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
+
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version: 1.23.3
+
       - name: Install dependencies
         run: go mod download
+
       - name: Build
         run: go build -o cukectrl cmd/cukectrl/main.go
+
       - name: Build the Docker image
         id: build-docker-image
-        run: >
-          docker buildx build . 
-          --file Dockerfile.scratch
-          --tag ghcr.io/miuzaki/cukectrl
+        run: |
+          docker buildx build . \
+            --file Dockerfile.scratch \
+            --tag ghcr.io/miuzaki/cukectrl
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push Docker Image
         run: |
