@@ -1,0 +1,6 @@
+FROM scratch
+
+COPY cukectrl  /cukectrl
+
+
+ENTRYPOINT ["/cukectrl"]
