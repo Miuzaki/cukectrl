@@ -21,7 +21,9 @@ import (
 
 func main() {
 
-	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	if os.Getenv("DEBUG") == "true" {
+		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	}
 
 	db := database.Init()
 	commands.Init()
