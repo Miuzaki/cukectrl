@@ -33,8 +33,8 @@ jobs:
         run: >
           docker buildx build . 
           --file Dockerfile.scratch
-          --tag ghcr.io/Miuzaki/cukectrl
+          --tag ghcr.io/miuzaki/cukectrl
 
       - name: Push Docker Image
         run: |
-          docker push ghcr.io/Miuzaki/cukectrl
+          docker push ghcr.io/miuzaki/cukectrl
