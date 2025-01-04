@@ -15,6 +15,6 @@ RUN --mount=type=cache,target="/root/.cache/go-build" go build -o cukectrl cmd/c
 FROM alpine
 
 WORKDIR /app    
-COPY --from=builder /app/main .
+COPY --from=builder /app/cukectrl .
 
-CMD ["./main"]
+CMD ["./cukectrl"]
