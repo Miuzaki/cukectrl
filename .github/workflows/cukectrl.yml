@@ -36,6 +36,7 @@ jobs:
         id: build-docker-image
         run: |
           docker buildx build . \
+            --file Dockerfile.scratch \
             --tag ghcr.io/miuzaki/cukectrl
 
       - name: Login to GHCR
