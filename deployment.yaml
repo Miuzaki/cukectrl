@@ -13,11 +13,11 @@ spec:
       labels:
         app: cukectrl
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
         - name: cukectrl
           image: ghcr.io/miuzaki/cukectrl:latest
           envFrom:
             - configMapRef:
-                name: app-env
-          ports:
-            - containerPort: 8080
+                name: cukectrl-env

@@ -10,7 +10,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o /cmd/dash/main .
+RUN go build -o /cmd/cukectrl/main .
 
 FROM alpine
 
