@@ -21,7 +21,7 @@ import (
 
 func main() {
 
-	if os.Getenv("DEBUG") == "true" {
+	if os.Getenv("ENVIRONMENT") == "development" {
 		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	}
 
