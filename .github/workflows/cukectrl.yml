@@ -1,47 +1,39 @@
-name: main
+name: Build and Push Docker Image
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - uses: actions/cache@v4
+      # Step 2: Log in to GitHub Container Registry
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
         with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Go
-        uses: actions/setup-go@v5
+      # Step 3: Set up Docker Buildx (optional but recommended for multi-platform builds)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Step 4: Build and push the Docker image
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
         with:
-          go-version: 1.23.3
-
-      - name: Install dependencies
-        run: go mod download
-
-      - name: Build
-        run: go build -o cukectrl cmd/cukectrl/main.go
-
-      - name: Build the Docker image
-        id: build-docker-image
-        run: |
-          docker buildx build . \
-            --file Dockerfile.scratch \
-            --tag ghcr.io/miuzaki/cukectrl
-
-      - name: Login to GHCR
-        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Push Docker Image
-        run: |
-          docker push ghcr.io/miuzaki/cukectrl
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ghcr.io/miuzaki/cukectrl:latest
+            ghcr.io/miuzaki/cukectrl:${{ github.sha }}
