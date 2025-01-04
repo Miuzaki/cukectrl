@@ -6,11 +6,19 @@ COPY go.mod .
 
 COPY go.sum .
 
-RUN go mod download
+RUN --mount=type=cache,target=/go/pkg/mod/ \
+  --mount=type=bind,source=go.sum,target=go.sum \
+  --mount=type=bind,source=go.mod,target=go.mod \
+  go mod download -x
+
+ENV GOCACHE=/root/.cache/go-build
 
 COPY . .
 
-RUN --mount=type=cache,target="/root/.cache/go-build" go build -o cukectrl cmd/cukectrl/main.go 
+RUN --mount=type=cache,target=/go/pkg/mod/ \
+  --mount=type=cache,target="/root/.cache/go-build" \
+  --mount=type=bind,target=. \
+  go build -o cukectrl cmd/cukectrl/main.go 
 
 FROM alpine
 
