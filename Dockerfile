@@ -11,8 +11,8 @@ COPY . .
 # Adicione este comando para verificar o conteúdo do diretório
 RUN ls -R /app
 
-# Ajuste o caminho caso necessário
-RUN go build -o /cmd/cukectrl/main .
+# Ajuste o caminho para o diretório correto com o main.go
+RUN go build -o /cmd/cukectrl/main ./cmd/cukectrl
 
 FROM alpine
 
