@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cukectrl
+  namespace: cukectrl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cukectrl
+  template:
+    metadata:
+      labels:
+        app: cukectrl
+    spec:
+      containers:
+        - name: cukectrl
+          image: ghcr.io/miuzaki/cukectrl:latest
+          envFrom:
+            - configMapRef:
+                name: app-env
+          ports:
+            - containerPort: 8080
