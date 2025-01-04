@@ -1,23 +1,20 @@
-FROM golang:alpine AS builder
+FROM  golang:alpine as builder
 
 WORKDIR /app
 
 COPY go.mod .
+
 COPY go.sum .
+
 RUN go mod download
 
 COPY . .
 
-# Adicione este comando para verificar o conteúdo do diretório
-RUN ls -R /app
-
-# Ajuste o caminho para o diretório correto com o main.go
-RUN go build -o /cmd/cukectrl/main ./cmd/cukectrl
+RUN go build -o cukectrl /cmd/cukectrl/main.go 
 
 FROM alpine
 
 WORKDIR /app    
-
-COPY --from=builder /cmd/cukectrl/main .
+COPY --from=builder /app/main .
 
 CMD ["./main"]
