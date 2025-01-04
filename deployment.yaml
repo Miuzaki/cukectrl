@@ -18,6 +18,7 @@ spec:
       containers:
         - name: cukectrl
           image: ghcr.io/miuzaki/cukectrl:latest
+          imagePullPolicy: Always
           envFrom:
             - configMapRef:
                 name: cukectrl-env
