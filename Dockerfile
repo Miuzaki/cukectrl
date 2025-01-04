@@ -10,7 +10,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o cukectrl cmd/cukectrl/main.go 
+RUN --mount=type=cache,target="/root/.cache/go-build" go build -o cukectrl cmd/cukectrl/main.go 
 
 FROM alpine
 
